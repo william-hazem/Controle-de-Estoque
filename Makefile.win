@@ -1,0 +1,37 @@
+# Project: Controle de Estoque
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = windres.exe
+OBJ      = source/Estoque.o source/main.o source/Perecivel.o source/Produto.o
+LINKOBJ  = source/Estoque.o source/main.o source/Perecivel.o source/Produto.o
+LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc
+INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
+CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
+BIN      = "Controle de Estoque.exe"
+CXXFLAGS = $(CXXINCS) -ansi -std=c++11
+CFLAGS   = $(INCS) -ansi -std=c++11
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+source/Estoque.o: source/Estoque.cpp
+	$(CPP) -c source/Estoque.cpp -o source/Estoque.o $(CXXFLAGS)
+
+source/main.o: source/main.cpp
+	$(CPP) -c source/main.cpp -o source/main.o $(CXXFLAGS)
+
+source/Perecivel.o: source/Perecivel.cpp
+	$(CPP) -c source/Perecivel.cpp -o source/Perecivel.o $(CXXFLAGS)
+
+source/Produto.o: source/Produto.cpp
+	$(CPP) -c source/Produto.cpp -o source/Produto.o $(CXXFLAGS)
