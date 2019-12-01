@@ -1,312 +1,858 @@
-#include "..\\header\\Estoque.h"
-
-#include "..\\func\\wtime.h"	//Minha funÁ„o by will <3
+#include "..//header//Estoque.h"
+#include "..//func//wtime.h"    //Minha fun√ß√£o by will <3
 
 #include <cstring>
 
 #include <clocale>
 
 #include <iomanip>
-
-#include <utility>
-
-//Escopo de funÁıes
+ //Escopo de fun√ß√µes
 void menu();
-int escolha();
-Produto_t lerItem();
-void removerEspaco(Produto_t*);
-long dataSistema();
+14
+	+ int escolha();
+15
+	+ Produto_t lerItem();
+16
+	+ void removerEspaco(Produto_t*);
+17
+	+ long int dataSistema();
+18
+	+ void imprime(Produto);
+19
+	+ void imprime(Perecivel);
+20
+	+
+21
+	+ //MAIN
+22
+	+ int main()
+23
+	+ {
+24
+	+     setlocale(LC_ALL,"portuguese");
+25
+	+     system("func\\cdata.bat");
+26
+	+   system("COLOR B");
+27
+	+     
+28
+	+   //Inst√¢ncias auxiliares
+29
+	+     Produto_t item;
+30
+	+     Perecivel perecivel;
+31
+	+     Produto produto;
+32
+	+
+33
+	+     //Inst√¢ncia principal
+34
+	+     Estoque estoque;
+35
+	+
+36
+	+     //Vari√°veis
+37
+	+     long data_atual = dataSistema();
+38
+	+     long int codigo;
+39
+	+   size_t op1, op2, quantidade_produto;
+40
+	+     size_t sentinela, x = 0;
+41
+	+
+42
+	+     do
+43
+	+     {
+44
+	+         menu();
+45
+	+         while(x == 0){
+46
+	+             op1 = escolha();
+47
+	+             try{
+48
+	+                 if((op1 < 0) || (op1 > 7)){
+49
+	+                     throw "Voc√™ n√£o informou a op√ß√£o corretamente!";}
+50
+	+                 else{x = 1;}
+51
+	+             }
+52
+	+             catch(const char* e){
+53
+	+                 cout << "Erro: " << e << endl;
+54
+	+               }
+55
+	+           }
+56
+	+     system("cls");
+57
+	+         
+58
+	+     switch(op1)
+59
+	+         {
 
-//MAIN
-int main() 
-{	
-	setlocale(LC_ALL,"portuguese");
-	system("func\\cdata.bat");
-	
-	//Inst‚ncias auxiliares
-	Produto_t item;
-	Perecivel perecivel;
-	Produto produto;
-	
-	//Inst‚ncia principal
-	Estoque estoque;
-	
-	//Vari·veis
-	long data_atual = dataSistema();
-	size_t op1, op2;
-	size_t sentinela;
-	
-	system("COLOR B");
-
-	do
-	{ 
-		menu();
-		op1 = escolha();
-		sentinela = op1;
-		switch(op1)
-		{
-			case 1:
-				
-				cout << "->QUAL O TIPO DE ENTRADA: " << endl;
-				cout << "(1) - Adicionar novo produto" << endl;
-				cout << "(2) - Adicionar produto perecivel" << endl;
-				cout << "(3) - Adicionar produto existente" << endl;
-				cout << "(4) - Voltar ao menu principal" << endl;
-				cout << "(0) - Encerrar o programa" << endl;
-				op1 = escolha();
-				sentinela = op1;
-				switch(op1)
-				{
-					case 1:
-						item = lerItem();
-						produto.setItem(item);	
-						if(estoque.adicionarProduto(produto))
-							cout << "Produto adicionado ao estoque." << endl;
-						else
-							cout << "N„o foi possÌvel adicionar o produto. O cÛdigo utilizado j· foi registrado por outro produto." << endl;	
-						estoque.salvarProdutos();
-						stopf(1000);
-						break;
-						
-					case 2:
-						long int data_vencimento;
-						item = lerItem();
-						cout << "Data de validade" << endl;
-						cin >> data_vencimento; cin.ignore();
-						perecivel.setData_validade(data_vencimento);
-						perecivel.setItem(item);
-						if(estoque.adicionarProduto(perecivel))
-							cout << "Produto adicionado ao estoque." << endl;
-						else
-							cout << "N„o foi possÌvel adicionar o produto. O cÛdigo utilizado j· foi registrado por outro produto." << endl;
-						estoque.salvarPereciveis();
-						stopf(1000);
-						break;
-						
-					case 3:
-						long int codigo;
-						int quantidade_produto;
-						
-						cout << "Informe o cÛdigo do produto que deseja adicionar" << endl;
-						cin >> codigo; cin.ignore();
-						cout << "Quantas unidades ser„o adicionadas? " << endl;
-						cin >> quantidade_produto; cin.ignore();
-						  
-						if(estoque.adicionarProduto(codigo, quantidade_produto))
-							cout << "O produto foi adicionado." << endl;
-						else
-							cout << "N„o foi possÌvel adicionar o produto; o cÛdigo n„o confere." << endl;
-						stopf(1000);
-						break;
-					
-
-					default:
-						
-				    	break;
-				}
-				estoque.salvarInfo();
-				system("cls");
-			break;	
-			
-			case 2:
-    			cout << "(1) Ordenar por Nome" << endl;
-    			cout << "(2) Ordenar por Categoria" << endl;
-    			cout << "(3) Ordenar por PreÁo" << endl;
-				cout << "(4) - Voltar ao menu principal" << endl;
-				cout << "(0) - Encerrar o programa" << endl;
-				op1 = escolha();
-				sentinela = op1;
-				
-				switch(op1){
-					
-					case 1:
-						
-						estoque.opNome();
-						cout << "Produtos ordenados por Nome: " << endl;
-						estoque.imprimeProdutos();
-						cout << "Produtos PerecÌveis ordenados por Nome: " << endl;
-						estoque.imprimePereciveis();
-						break;
-					case 2:
-						
-						estoque.opCategoria();
-						cout << "Produtos ordenados por Categoria: " << endl;
-						estoque.imprimeProdutos();
-						cout << "Produtos PerecÌveis ordenados por Categoria: " << endl;
-						estoque.imprimePereciveis();
-						break;
-					case 3:
-						
-						estoque.opPreco();
-						cout << "Produtos ordenados por Preco: " << endl;
-						estoque.imprimeProdutos();
-						cout << "Produtos PerecÌveis ordenados por Preco: " << endl;
-						estoque.imprimePereciveis();
-						break;
-					
-					case 4:
-						break;
-					default:
-						cout << "OpÁ„o inv·lida." << endl;
-						break;
-				}
-				system("pause");
-				system("cls");
-				break;
-				
-			case 3:
-				cout << "(1) - Remover item usando o cÛdigo do produto" << endl;
-				cout << "(2) - Remover os produtos vencidos" << endl;
-				cout << "(3) - Voltar ao menu principal" << endl;
-				cout << "(0) - Encerrar o programa" << endl;
-				op1 = escolha();
-				sentinela = op1;
-				switch(op1)
-				{
-					case 1:
-						int codigo;
-						cout << "Informe o cÛdigo do produto:" << endl;
-						cin >> codigo;
-						if(estoque.remover(codigo))
-							cout << "Removido com sucesso" << endl;
-						else
-							cout << "O cÛdigo digitado n„o pertence a nenhum produto" << endl;
-						break;
-					
-					case 2:	// Analisar as condicionais dos mÈtodos e estabelecer uma comunicaÁ„o com o usuario
-						cout << "Exibindo produtos vencidos: ( Intervalo de vencimento: 0 dia(s) )"  << endl;
-						cout << left << "|" <<setw(25) << "Categoria" << "|" << setw(25) << "Nome" << "|" << setw(25) <<"Marca" << "|" << setw(10) << "Data" << "|" << endl;
-						cout << setfill('=') << setw(25+25+25+10+5) << " " << endl;
-						cout << setfill('.');
-						vector<Perecivel> auxiliar = estoque.removerVencido(data_atual);
-						for(size_t index = 0; index < auxiliar.size(); index ++)
-						{
-							Produto_t item = auxiliar[index].getItem();
-							cout << left << "|" << setw(25) << item.categoria << "|" << setw(25) << item.nome_produto << "|" << setw(25) << item.marca << "|" << setw(10) << auxiliar[index].getData_validade() << "|" << endl;
-						}
-						system("pause");
-						break;
-				}
-			
-			case 4:
-				cout << "(1) - Pesquisar produto a partir do codigo"<< endl; 
-				cout << "(2) - Pesquisar produtos perto do vencimento da data de validade e exibi-los" << endl;
-				cout << "(3) - Voltar ao menu principal" << endl;
-				cout << "(0) - Encerrar o programa" << endl;
-				op1 = escolha();
-				sentinela = op1;
-				switch(op1)
-				{
-					case 1:
-						int codigo;
-						cout << "Informe o cÛdigo do produto:" << endl;
-						cin >> codigo;
-						/*
-						if (estoque.pesquisar(codigo))//fazer mÈtodo que pesquise o produto pelo seu cÛdigo
-							cout << estoque.retornaProduto(codigo) << endl;//fazer um mÈtodo para retornar o produto pelo seu cÛdigo
-					   	else
-					   		cout << "Produto n„o encontrado."<< endl;
-						break;
-						*/
-					break;
-					case 2://este caso ser· terminado durante o decorrer da semana
-					
-						//cout    - N„o deixar de qualquer jeito os cÛdigos espalhados pelo programa - PS: WILLIAM
-						short limite_dias = 3;
-						for(short int i = 0; i < estoque.retornaTamanhoPerecivel(); i++){//verificar a forma correta de realizar esse for
-							Perecivel auxiliar = estoque.retornaPerecivel(i);
-							if(perecivel.tempoValidade(data_atual) < limite_dias)//È necess·rio percorrer o vector 'pereciveis' e procurar os produtos 
-																//com o tempoValidade < limite_dias que pode ser informado pelo usu·rio
-							cout << "Produtos prÛximos de passarem da data de validade:" << endl;
-						}
-					break;
-
-				}
-				break;
-				
-			case 5://registro geral
-				
-				
-			case 6:// configuraÁıes	
-				
-							
-			break;
-			default:
-			break;		
-		}
-	}while(sentinela);
-
-	return 0;
-}
-
-void menu()
-{
-	/*
-		A funÁ„o tÍm como objetivo escrever a saÌda de texto abaixo e minimizar a quantidade de codigos dentro do escopo da main
-	*/
-	long int data_atual = dataSistema();
-	cout << "                          " << right << data_atual/1000000 << "/" << data_atual/10000%100 << "/" << data_atual%10000 << endl;
-	
-	cout << "====================================" << endl;
-	cout << " __   __  _______  __    _  __   __ " << endl;
-	cout << "|  |_|  ||       ||  |  | ||  | |  |" << endl;
-	cout << "|       ||    ___||   |_| ||  | |  |" << endl;
-	cout << "|       ||   |___ |       ||  |_|  |" << endl;
-	cout << "|       ||    ___||  _    ||       |" << endl;
-	cout << "| ||_|| ||   |___ | | |   ||       |" << endl;
-	cout << "|_|   |_||_______||_|  |__||_______|" << endl;
-	cout << endl;
-	cout << "====================================" << endl;
-	cout << "\tMenu de opÁıes: " << endl << endl;
-	cout << "(1) - Adicionar Produto" << endl;	//Criar opÁ„o para adicionar produto existente apartir do cÛdigo deste
-	
-	cout << "(2) - Imprimir Dados Ordenados" << endl;	//Fazer submenu com opıes para (1 - com subopÁıes para cada ordenaÁ„o, 
-    //depois disso ele deve retornar para o submenu)ordenar e (2)imprimir - verificar a classe estoque.h
-	
-	cout << "(3) - Remover Produto" << endl;	//NESTE SUBMENU, deve haver 3 cases. (1) remover um produto do estoque atravÈs de seu codigo. (2) retirar uma certa quantidade de produtos do estoque atravÈs de seu codigo. (3) remover os produtos vencidos do estoque.
-	
-	cout << "(4) - Verificar estoque" << endl;	//Fazer submenu, (1)criar opÁıes para pesquisar algum produto a partir do codigo deste, (2)para dizer se h· produtos perto da data de validade e exibi-los
-	cout << "(5) - Registro Geral" << endl;		//Fazer submenu, precisa ver com francinildo esta aparte
-	cout << "(6) - ConfiguraÁıes" << endl;
-	cout << "(7) - Salvar" << endl;			//Chamar os mÈtodos salvarProduto, salvarPereciveis, salvarInfo.. exibir de acordo com o retorno se foi possivel ou n„o salvar o arquivo
-	cout << "(0) - Encerrar o programa" << endl;
-	//Adicionar um item para voltar para o menu principal para todos os item itens acima
-	//Criar uma s·ida paradr„o notificando que a entrada È invalida para todos os casos acima
-}
-
-int escolha()
-{
-	int opcao;
-	cout << "->DIGITE A OP«¬O DESEJADA: ";
-	cin >> opcao; cin.ignore();
-	system("cls");
-	return opcao;
-}
-
-Produto_t lerItem()
-{
-	Produto_t item;
-	cout << "Categoria: ";
-	getline(cin,item.categoria);
-	cout << "Codigo: ";
-	cin >> item.codigo; cin.ignore();
-	cout << "Preco de venda: ";
-	cin >> item.preco_venda; cin.ignore();
-	cout << "Marca: ";
-	getline(cin,item.marca);
-	cout << "Nome do produto: ";
-	getline(cin,item.nome_produto);
-	cout << "Quantidade: ";
-	cin >> item.quantidade;
-	
-	return item;
-}
-
-long dataSistema()
-{
-	int dia, mes, ano;	
-	ifstream arquivo("func\\info\\data.txt");
-	arquivo >> dia >> mes >> ano;
-	arquivo.close();
-	return (dia*1000000 + mes*10000 + ano);
-}
+             case 1:
+	+                 cout << "->QUAL O TIPO DE ENTRADA: " << endl;
+62
+	+                 cout << "(1) - Adicionar novo produto" << endl;
+63
+	+                 cout << "(2) - Adicionar produto perecivel" << endl;
+64
+	+                 cout << "(3) - Adicionar produto existente" << endl;
+65
+	+                 cout << "(4) - Voltar ao menu principal" << endl;
+66
+	+                 cout << "(0) - Encerrar o programa" << endl;
+67
+	+
+68
+	+         x = 0;
+69
+	+         while(x == 0){
+70
+	+             try{
+71
+	+               op2 = escolha();
+72
+	+               if((op2 < 0) || (op2 > 4)){
+73
+	+               throw "Voc√™ n√£o informou a op√ß√£o corretamente!";}
+74
+	+               else{x = 1;}
+75
+	+               }
+76
+	+               catch(const char* e){
+77
+	+               cout << "Erro: " << e << endl;
+78
+	+             }
+79
+	+           }
+80
+	+                 system("cls");
+81
+	+         
+82
+	+         switch(op2)
+83
+	+               {
+84
+	+                     case 1:
+85
+	+                         item = lerItem();
+86
+	+                         produto.setItem(item);
+87
+	+                         if(estoque.adicionarProduto(produto))
+88
+	+                             cout << "Produto adicionado ao estoque." << endl;
+89
+	+                         else
+90
+	+                             cout << "N√£o foi poss√≠vel adicionar o produto. O c√≥digo utilizado j√° foi registrado por outro produto." << endl;
+91
+	+                         estoque.salvarProdutos();
+92
+	+                         stopf(1000);
+93
+	+                         break;
+94
+	+
+95
+	+                     case 2:
+96
+	+                         long int data_vencimento;
+97
+	+                         item = lerItem();
+98
+	+                         cout << "Data de validade:" << endl;
+99
+	+                         cin >> data_vencimento; cin.ignore();
+100
+	+                         perecivel.setData_validade(data_vencimento);
+101
+	+                         perecivel.setItem(item);
+102
+	+                         if(estoque.adicionarProduto(perecivel))
+103
+	+                             cout << "Produto adicionado ao estoque." << endl;
+104
+	+                         else
+105
+	+                             cout << "N√£o foi poss√≠vel adicionar o produto. O c√≥digo utilizado j√° foi registrado por outro produto." << endl;
+106
+	+                         estoque.salvarPereciveis();
+107
+	+                         stopf(1000);
+108
+	+                         break;
+109
+	+
+110
+	+                     case 3:
+111
+	+                         cout << "Informe o c√≥digo do produto que deseja adicionar" << endl;
+112
+	+                         cin >> codigo; cin.ignore();
+113
+	+                         cout << "Quantas unidades ser√£o adicionadas? " << endl;
+114
+	+                         cin >> quantidade_produto; cin.ignore();
+115
+	+
+116
+	+                         if(estoque.adicionarProduto(codigo, quantidade_produto))
+117
+	+                             cout << "O produto foi adicionado." << endl;
+118
+	+                         else
+119
+	+                             cout << "N√£o foi poss√≠vel adicionar o produto; o c√≥digo n√£o confere." << endl;
+120
+	+                         stopf(1000);
+121
+	+                         break;
+122
+	+           
+123
+	+           case 4:
+124
+	+             break;
+125
+	+                     
+126
+	+           case 5:
+127
+	+             op1 = 0;
+128
+	+                   }
+129
+	+             estoque.salvarInfo();
+130
+	+             system("pause");
+131
+	+       system("cls");
+132
+	+
+133
+	+             case 2:
+134
+	+             cout << "(1) - Ordenar por Nome" << endl;
+135
+	+             cout << "(2) - Ordenar por Categoria" << endl;
+136
+	+             cout << "(3) - Ordenar por Pre√ßo" << endl;
+137
+	+                 cout << "(4) - Voltar ao menu principal" << endl;
+138
+	+                 cout << "(0) - Encerrar o programa" << endl;
+139
+	+         
+140
+	+         x = 0;
+141
+	+         while(x == 0){
+142
+	+             try{
+143
+	+               op2 = escolha();
+144
+	+               if((op2 < 0) || (op2 > 4)){
+145
+	+               throw "Voc√™ n√£o informou a op√ß√£o corretamente!";}
+146
+	+               else{x = 1;}
+147
+	+               }
+148
+	+               catch(const char* e){
+149
+	+               cout << "Erro: " << e << endl;
+150
+	+                 }
+151
+	+           }
+152
+	+         system("cls");
+153
+	+                 
+154
+	+         switch(op2)
+155
+	+         {
+156
+	+                     case 1:
+157
+	+                         estoque.opNome();
+158
+	+                         cout << "Produtos ordenados por Nome: " << endl;
+159
+	+                         estoque.imprimeProdutos();
+160
+	+                         cout << "Produtos Perec√≠veis ordenados por Nome: " << endl;
+161
+	+                         estoque.imprimePereciveis();
+162
+	+                         break;
+163
+	+
+164
+	+                     case 2:
+165
+	+                         estoque.opCategoria();
+166
+	+                         cout << "Produtos ordenados por Categoria: " << endl;
+167
+	+                         estoque.imprimeProdutos();
+168
+	+                         cout << "Produtos Perec√≠veis ordenados por Categoria: " << endl;
+169
+	+                         estoque.imprimePereciveis();
+170
+	+                         break;
+171
+	+
+172
+	+                     case 3:
+173
+	+                         estoque.opPreco();
+174
+	+                         cout << "Produtos ordenados por Preco: " << endl;
+175
+	+                         estoque.imprimeProdutos();
+176
+	+                         cout << "Produtos Perec√≠veis ordenados por Preco: " << endl;
+177
+	+                         estoque.imprimePereciveis();
+178
+	+                         break;
+179
+	+
+180
+	+                     case 4:
+181
+	+                         break;
+182
+	+                     
+183
+	+           case 0:
+184
+	+                         op1 = 0;
+185
+	+                 }
+186
+	+           system("pause");
+187
+	+           system("cls");
+188
+	+
+189
+	+             case 3:
+190
+	+                 cout << "(1) - Remover item usando o c√≥digo do produto" << endl;
+191
+	+                 cout << "(2) - Remover os produtos vencidos" << endl;
+192
+	+                 cout << "(3) - Remove uma quantidade de produtos, a partir de seu c√≥digo" << endl;
+193
+	+                 cout << "(4) - Voltar ao menu principal" << endl;
+194
+	+                 cout << "(0) - Encerrar o programa" << endl;
+195
+	+                 
+196
+	+         x = 0;
+197
+	+         while(x == 0){
+198
+	+             try{
+199
+	+               op2 = escolha();
+200
+	+               if((op2 < 0) || (op2 > 4)){
+201
+	+               throw "Voc√™ n√£o informou a op√ß√£o corretamente!";}
+202
+	+               else{x = 1;}
+203
+	+               }
+204
+	+               catch(const char* e){
+205
+	+               cout << "Erro: " << e << endl;
+206
+	+                 }
+207
+	+           }
+208
+	+         system("cls");
+209
+	+                 
+210
+	+         switch(op2)
+211
+	+                 {
+212
+	+                     case 1:
+213
+	+                         cout << "Informe o c√≥digo do produto:" << endl;
+214
+	+                         cin >> codigo;
+215
+	+                         if(estoque.remover(codigo))
+216
+	+                             cout << "Produto removido com sucesso." << endl;
+217
+	+                         else
+218
+	+                             cout << "O c√≥digo digitado n√£o pertence a nenhum produto" << endl;
+219
+	+                         break;
+220
+	+
+221
+	+                     case 2:
+222
+	+                         cout << "Exibindo produtos vencidos: ( Intervalo de vencimento: 0 dia(s) )"  << endl;
+223
+	+                         cout << left << "|" <<setw(25) << "Categoria" << "|" << setw(25) << "Nome" << "|" << setw(25) <<"Marca" << "|" << setw(10) << "Data" << "|" << endl;
+224
+	+                         cout << setfill('=') << setw(25+25+25+10+5) << " " << endl;
+225
+	+                         cout << setfill('.');
+226
+	+                         vector<Perecivel> auxiliar = estoque.removerVencido(data_atual);
+227
+	+                         for(size_t index = 0; index < auxiliar.size(); index ++)
+228
+	+                         {
+229
+	+                             Produto_t item = auxiliar[index].getItem();
+230
+	+                             cout << left << "|" << setw(25) << item.categoria << "|" << setw(25) << item.nome_produto << "|" << setw(25) << item.marca << "|" << setw(10) << auxiliar[index].getData_validade() << "|" << endl;
+231
+	+                         }
+232
+	+                         break;
+233
+	+
+234
+	+                     case 3:
+235
+	+            cout << "Informe o c√≥digo do produto: " << endl;
+236
+	+            cin >> codigo; cin.ignore();
+237
+	+            cout << "Agora informe a quantidade de produtos que ser√£o removidos: " << endl;
+238
+	+                      cin >> quantidade_produto; cin.ignore();
+239
+	+
+240
+	+                         if(estoque.remover(codigo,quantidade_produto))
+241
+	+                             cout << "Produto(s) removido(s) com sucesso. " << endl;
+242
+	+                         else
+243
+	+                             cout << "C√≥digo ou quantidade n√£o conferem." << endl;
+244
+	+           
+245
+	+           case 4:
+246
+	+             break;
+247
+	+
+248
+	+           case 0:
+249
+	+             op1 = 0;
+250
+	+                   }
+251
+	+       system("pause");
+252
+	+             system("cls");
+253
+	+               
+254
+	+       case 4:
+255
+	+                 cout << "(1) - Pesquisar produto a partir do codigo"<< endl;
+256
+	+                 cout << "(2) - Pesquisar produtos perto do vencimento da data de validade e exibi-los" << endl;
+257
+	+                 cout << "(3) - Voltar ao menu principal" << endl;
+258
+	+                 cout << "(0) - Encerrar o programa" << endl;
+259
+	+                 
+260
+	+                 x = 0;
+261
+	+         while(x == 0){
+262
+	+             try{
+263
+	+               op2 = escolha();
+264
+	+               if((op2 < 0) || (op2 > 3)){
+265
+	+               throw "Voc√™ n√£o informou a op√ß√£o corretamente!";}
+266
+	+               else{x = 1;}
+267
+	+               }
+268
+	+               catch(const char* e){
+269
+	+               cout << "Erro: " << e << endl;
+270
+	+                 }
+271
+	+           }
+272
+	+       system("cls");
+273
+	+         
+274
+	+         switch(op2)
+275
+	+                 {
+276
+	+                     case 1:
+277
+	+                         size_t index, opcao;
+278
+	+                         cout << "(1) - Para um n√£o perec√≠vel" << endl;
+279
+	+                         cout << "(2) - Para um perec√≠vel" << endl;
+280
+	+                         
+281
+	+             x = 0;
+282
+	+             while(x == 0){
+283
+	+               try{
+284
+	+                 cin >> opcao; cin.ignore();
+285
+	+                 if((opcao < 1) || (opcao > 2)){
+286
+	+                 throw "Voc√™ n√£o informou a op√ß√£o corretamente!";}
+287
+	+                 else{x = 1;}
+288
+	+               }
+289
+	+               catch(const char* e){
+290
+	+               cout << "Erro: " << e << endl;
+291
+	+                 }
+292
+	+               }
+293
+	+             system("cls");
+294
+	+             
+295
+	+             cout << "Informe o c√≥digo do produto:" << endl;
+296
+	+                         cin >> codigo;
+297
+	+                         if (opcao==1){
+298
+	+                            index = estoque.pesquisarProduto(codigo);
+299
+	+                            Produto auxiliar = estoque.retornaProduto(index);
+300
+	+                            cout << "Produto com o respectivo c√≥digo:" << endl;
+301
+	+                            imprime(auxiliar);
+302
+	+                         }
+303
+	+                         if (opcao==2){
+304
+	+                             index = estoque.pesquisarPerecivel(codigo);
+305
+	+                             Perecivel auxiliar = estoque.retornaPerecivel(index);
+306
+	+                             cout << "Produto perec√≠vel com o respectivo c√≥digo:" << endl;
+307
+	+                             imprime(auxiliar);
+308
+	+                             cout << "Data de Vaidade: " << perecivel.getData_validade() << endl;
+309
+	+             }
+310
+	+              break;
+311
+	+                     case 2: 
+312
+	+             long data;
+313
+	+                         cout << "Informe a data atual: " << endl;
+314
+	+                         cin >> data; cin.ignore();
+315
+	+                         vector<Perecivel> perecivel_aux = estoque.retornaPerecivel();
+316
+	+                         index = estoque.retornaTamanhoPerecivel();
+317
+	+                         cout << "Produtos pr√≥ximos de se vencer" << endl;
+318
+	+                         for(size_t i = 0;i < index;i++){
+319
+	+                             if (perecivel_aux[i].tempoValidade(data) < 3){
+320
+	+                                     Perecivel aux = estoque.retornaPerecivel(i);
+321
+	+                                     imprime(aux);
+322
+	+                                     cout << endl;
+323
+	+                             }
+324
+	+                         }
+325
+	+                       break;
+326
+	+         
+327
+	+                   case 3:
+328
+	+             break;
+329
+	+           case 0:
+330
+	+             op1 = 0;
+331
+	+         }
+332
+	+             case 5://registro geral
+333
+	+         break;
+334
+	+             case 6:// configura√ß√µes
+335
+	+
+336
+	+               break;
+337
+	+         
+338
+	+             default: 
+339
+	+               break;
+340
+	+         }
+341
+	+     }while(op1);
+342
+	+
+343
+	+     return 0;
+344
+	+ }
+345
+	+
+346
+	+ void menu()
+347
+	+ {
+348
+	+     /*
+349
+	+         A fun√ß√£o t√™m como objetivo escrever a sa√≠da de texto abaixo e minimizar a quantidade de codigos dentro do escopo da main
+350
+	+     */
+351
+	+     long int data_atual = dataSistema();
+352
+	+     cout << "                          " << right << data_atual/1000000 << "/" << data_atual/10000%100 << "/" << data_atual%10000 << endl;
+353
+	+
+354
+	+     cout << "====================================" << endl;
+355
+	+     cout << " __   __  _______  __    _  __   __ " << endl;
+356
+	+     cout << "|  |_|  ||       ||  |  | ||  | |  |" << endl;
+357
+	+     cout << "|       ||    ___||   |_| ||  | |  |" << endl;
+358
+	+     cout << "|       ||   |___ |       ||  |_|  |" << endl;
+359
+	+     cout << "|       ||    ___||  _    ||       |" << endl;
+360
+	+     cout << "| ||_|| ||   |___ | | |   ||       |" << endl;
+361
+	+     cout << "|_|   |_||_______||_|  |__||_______|" << endl;
+362
+	+     cout << endl;
+363
+	+     cout << "====================================" << endl;
+364
+	+     cout << "\tMenu de op√ß√µes: " << endl << endl;
+365
+	+     cout << "(1) - Adicionar Produto" << endl;    //Criar op√ß√£o para adicionar produto existente apartir do c√≥digo deste
+366
+	+
+367
+	+     cout << "(2) - Imprimir Dados Ordenados" << endl;    //Fazer submenu com op√µes para (1 - com subop√ß√µes para cada ordena√ß√£o,
+368
+	+     //depois disso ele deve retornar para o submenu)ordenar e (2)imprimir - verificar a classe estoque.h
+369
+	+
+370
+	+     cout << "(3) - Remover Produto" << endl;    //NESTE SUBMENU, deve haver 3 cases. (1) remover um produto do estoque atrav√©s de seu codigo. (2) retirar uma certa quantidade de produtos do estoque atrav√©s de seu codigo. (3) remover os produtos vencidos do estoque.
+371
+	+
+372
+	+     cout << "(4) - Verificar estoque" << endl;    //Fazer submenu, (1)criar op√ß√µes para pesquisar algum produto a partir do codigo deste, (2)para dizer se h√° produtos perto da data de validade e exibi-los
+373
+	+     cout << "(5) - Registro Geral" << endl;        //Fazer submenu, precisa ver com francinildo esta aparte
+374
+	+     cout << "(6) - Configura√ß√µes" << endl;
+375
+	+     cout << "(7) - Salvar" << endl;            //Chamar os m√©todos salvarProduto, salvarPereciveis, salvarInfo.. exibir de acordo com o retorno se foi possivel ou n√£o salvar o arquivo
+376
+	+     cout << "(0) - Encerrar o programa" << endl;
+377
+	+     //Adicionar um item para voltar para o menu principal para todos os item itens acima
+378
+	+     //Criar uma s√°ida paradr√£o notificando que a entrada √© invalida para todos os casos acima
+379
+	+ }
+380
+	+
+381
+	+ int escolha()
+382
+	+ {
+383
+	+     int opcao;
+384
+	+     cout << "->DIGITE A OP√á√ÇO DESEJADA: ";
+385
+	+     cin >> opcao; cin.ignore();
+386
+	+     system("cls");
+387
+	+     return opcao;
+388
+	+ }
+389
+	+
+390
+	+ Produto_t lerItem()
+391
+	+ {
+392
+	+     Produto_t item;
+393
+	+     cout << "Categoria: ";
+394
+	+     getline(cin,item.categoria); cin.ignore();
+395
+	+     cout << "Codigo: ";
+396
+	+     cin >> item.codigo; cin.ignore();
+397
+	+     cout << "Preco de venda: ";
+398
+	+     cin >> item.preco_venda; cin.ignore();
+399
+	+     cout << "Marca: ";
+400
+	+     getline(cin,item.marca);cin.ignore();
+401
+	+     cout << "Nome do produto: ";
+402
+	+     getline(cin,item.nome_produto); cin.ignore();
+403
+	+     cout << "Quantidade: ";
+404
+	+     cin >> item.quantidade;cin.ignore();
+405
+	+
+406
+	+     return item;
+407
+	+ }
+408
+	+
+409
+	+ long int dataSistema()
+410
+	+ {
+411
+	+     int dia, mes, ano;
+412
+	+     ifstream arquivo("func\\info\\data.txt");
+413
+	+     arquivo >> dia >> mes >> ano;
+414
+	+     arquivo.close();
+415
+	+     return (dia*1000000 + mes*10000 + ano);
+416
+	+ }
+417
+	+
+418
+	+ void imprime(Produto auxiliar)
+419
+	+ {
+420
+	+     cout <<"Nome: " << auxiliar.getItem().preco_venda << endl;
+421
+	+     cout <<"C√≥digo: " << auxiliar.getItem().preco_venda << endl;
+422
+	+     cout <<"Marca: " << auxiliar.getItem().marca << endl;
+423
+	+     cout <<"Categoria: " << auxiliar.getItem().categoria << endl;
+424
+	+     cout <<"Pre√ßo de venda: " << auxiliar.getItem().preco_venda << endl;
+425
+	+     cout <<"Quantidade: " << auxiliar.getItem().quantidade << endl;;
+426
+	+
+427
+	+ }
+428
+	+
+429
+	+ void imprime(Perecivel auxiliar)
+430
+	+ {
+431
+	+     cout <<"Nome: " << auxiliar.getItem().preco_venda << endl;
+432
+	+     cout <<"C√≥digo: " << auxiliar.getItem().preco_venda << endl;
+433
+	+     cout <<"Marca: " << auxiliar.getItem().marca << endl;
+434
+	+     cout <<"Categoria: " << auxiliar.getItem().categoria << endl;
+435
+	+     cout <<"Pre√ßo de venda: " << auxiliar.getItem().preco_venda << endl;
+436
+	+     cout <<"Quantidade: " << auxiliar.getItem().quantidade << endl;;
+437
+	+     cout <<"Data de validade" << auxiliar.getData_validade()<<endl;
+ } 

@@ -1,11 +1,11 @@
-#include "..\\header\\Produto.h"
+#include "..//header//Produto.h"
 
 Produto::Produto(Produto_t novoItem)
 {
     item = novoItem;
 }
 
-//Métdos SETS
+//Mï¿½tdos SETS
 void Produto::setItem(Produto_t novoItem)
 {
 	item = novoItem;
@@ -40,7 +40,7 @@ void Produto::setcodigo(int codigo)
 {
     this->item.codigo = codigo;
 }
-//Métodos GETS
+//Mï¿½todos GETS
 Produto_t Produto::getItem() const
 {
 	return item;

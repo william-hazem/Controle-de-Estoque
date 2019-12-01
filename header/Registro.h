@@ -3,17 +3,30 @@
 
 #include "Estoque.h"
 
-class Registro
+using namespace std;
+
+class Registro : public Estoque
 {
-	float saldo_loja;
-	list<string> Registro;
+	int q_entrada; // Quantidade de produtos que entraram no estoque
+	int q_saida; // Quantidade de produtos que sairam do estoque
+	float apurado;
+	float saldo;
 	
 	public:
 		Registro();
-		void salvaRegistro();			//ofstream
-		void imprimeRegistro() const;	
-		float calcularLucro() const;
-		float calcularDespesas() const;
+		void Registrar(Produto);
+		void set_saldo(float);
+		void set_q_entrada();
+		void set_q_saida(int);
+		float get_saldo()const;
+		float get_apurado()const;
+		int get_q_entrada()const;
+		int get_q_saida()const;
+		void imprimirRegistro()const;
+		float calcularDespezas()const;
+		void calcularApurado(size_t);
+		float calcularLucro()const;
+		void atualizaSaldo();
 };
 
 #endif

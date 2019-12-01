@@ -18,7 +18,7 @@ class Estoque
 {
 	
 private:
-	vector <Produto> produtos;			//Produtos não pereciveis
+	vector <Produto> produtos;			//Produtos nï¿½o pereciveis
 	vector <Perecivel> pereciveis;	
 	
 public:
@@ -35,8 +35,9 @@ public:
 	size_t pesquisarProduto(long) const;
 	size_t pesquisarPerecivel(long) const;
 	
-	bool checarVencimento(size_t, long) const;
-	vector<Perecivel> removerVencido(long);
+	bool checarVencimento(size_t, long, short = 0) const;
+  vector<Perecivel> retornaVencido(long, short = 0) const;
+	vector<Perecivel> removerVencido(long, short = 0);
 	
 	Produto retornaProduto(size_t) const;
 	Perecivel retornaPerecivel(size_t) const;
@@ -46,20 +47,20 @@ public:
 	size_t retornaTamanhoProduto() const;
 	size_t retornaTamanhoPerecivel() const;
 	
-	bool salvarProdutos(); 
+	bool salvarProdutos();
 	bool salvarPereciveis();
 	bool salvarInfo();
 
-	//Ordenação
+	//Ordenaï¿½o
 	void opNome();
 	void opPreco();
 	void opCategoria();	
 
-	//Impressão dos dados armazenados nos conteiners
+	//Impressï¿½o dos dados armazenados nos conteiners
 	void imprimeProdutos() const;
 	void imprimePereciveis() const;
 	
-	//Implementar os dois métodos abaixo - FRANCINILDO
+	//Implementar os dois mï¿½todos abaixo - FRANCINILDO
 	void modificarProduto(size_t);
 	void modificarPerecivel(size_t);
 };

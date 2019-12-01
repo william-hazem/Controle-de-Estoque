@@ -1,13 +1,13 @@
-#include "..\\header\\Estoque.h"
-#include "..\\func\\OverLoad.h"
+#include "..//header//Estoque.h"
+#include "..//func//OverLoad.h"
 
-//Construtor - inicialização dos dados salvos anteriormente
+//Construtor - inicializaÃ§Ã£o dos dados salvos anteriormente
 Estoque::Estoque()
 {
 	long int data;
 	size_t qProduto = 0, qPerecivel = 0;
 	ifstream arquivo_info;
-	arquivo_info.open("func\\info\\Info.txt");
+	arquivo_info.open("func//info//Info.txt");
 	
 	if(arquivo_info.is_open())
 	{
@@ -17,7 +17,7 @@ Estoque::Estoque()
 		if(qProduto != 0)
 		{
 			ifstream arquivo_leitura;
-			arquivo_leitura.open("func\\info\\Produto.txt");
+			arquivo_leitura.open("func//info//Produto.txt");
 			if(!arquivo_leitura.is_open())
 				cerr << endl;
 			else
@@ -33,9 +33,9 @@ Estoque::Estoque()
 		if(qPerecivel != 0)
 		{
 			ifstream arquivo_leitura;
-			arquivo_leitura.open("func\\info\\Perecivel.txt");
+			arquivo_leitura.open("func//info//Perecivel.txt");
 			if(!arquivo_leitura.is_open())
-				cerr << "func\\info\\Perecivel.tx não pode ser aberto" << endl;
+				cerr << "func//info//Perecivel.tx nï¿½o pode ser aberto" << endl;
 			else
 				for(size_t contador = 0; contador < qPerecivel; contador++)
 				{
@@ -54,11 +54,11 @@ Estoque::~Estoque()
 	if(salvarProdutos())
 		cerr << "Salvo com sucesso - Entrada 1" << endl;
 	else
-		cerr << "Não foi possível salvar o arquivo - Entrada 1" << endl;
+		cerr << "Nï¿½o foi possï¿½vel salvar o arquivo - Entrada 1" << endl;
 	if(salvarPereciveis())
 		cerr << "Salvo com sucesso - Entrada 2" << endl;
 	else
-		cerr << "Não foi possível salvar o arquivo - Entrada 2" << endl;
+		cerr << "Nï¿½o foi possï¿½vel salvar o arquivo - Entrada 2" << endl;
 		
 	salvarInfo();
 }
@@ -66,7 +66,7 @@ Estoque::~Estoque()
 //AdicionarProduto com sobrecargas locais
 bool Estoque::adicionarProduto(Produto novoItem)
 {
-	if(pesquisarProduto(novoItem.getItem().codigo) == produtos.size()+1 || pesquisarPerecivel(novoItem.getItem().codigo) == pereciveis.size()+1)
+	if(pesquisarProduto(novoItem.getItem().codigo) == produtos.size()+1 && pesquisarPerecivel(novoItem.getItem().codigo) == pereciveis.size()+1)
 	{
 		produtos.push_back(novoItem);
 		return true;
@@ -76,7 +76,7 @@ bool Estoque::adicionarProduto(Produto novoItem)
 
 bool Estoque::adicionarProduto(Perecivel novoItem)
 {
-	if(pesquisarProduto(novoItem.getItem().codigo) == produtos.size()+1 || pesquisarPerecivel(novoItem.getItem().codigo) == pereciveis.size()+1)
+	if(pesquisarProduto(novoItem.getItem().codigo) == produtos.size()+1 && pesquisarPerecivel(novoItem.getItem().codigo) == pereciveis.size()+1)
 	{
 		pereciveis.push_back(novoItem);
 		return true;	
@@ -86,7 +86,7 @@ bool Estoque::adicionarProduto(Perecivel novoItem)
 
 bool Estoque::adicionarProduto(long int codigo, long int quantidade)
 {
-	//Há componentes no vector produtos?
+	//Hï¿½ componentes no vector produtos?
 	if(produtos.begin() == produtos.end())
 		return false;
 	else	//Busca se existe algum produto existente
@@ -95,7 +95,7 @@ bool Estoque::adicionarProduto(long int codigo, long int quantidade)
 		produtos[index].setQuantidade(produtos[index].getItem().quantidade + quantidade);
 		return true;
 	}
-	//Há componentes no vector pereciveis?
+	//Hï¿½ componentes no vector pereciveis?
 	if(pereciveis.begin() == pereciveis.end())
 		return false;
 	else
@@ -170,14 +170,23 @@ size_t Estoque::pesquisarPerecivel(long codigo) const
 	return pereciveis.size()+1;
 }
 
-bool Estoque::checarVencimento(size_t index, long data_atual) const
+bool Estoque::checarVencimento(size_t index, long data_atual, short limite) const
 {
-	if(pereciveis[index].tempoValidade(data_atual) <= data_atual)
+	if(pereciveis[index].tempoValidade(data_atual) <= limite)
 		return true;
 	return false;
 }
+vector<Perecivel> Estoque::retornaVencido(long data_atual, short limite) const
+{
+  vector<Perecivel> auxiliar;
+  for(size_t index = 0; index < pereciveis.size(); index++)
+    if(checarVencimento(index,data_atual,limite))
+      auxiliar.push_back(pereciveis[index]);
 
-vector<Perecivel> Estoque::removerVencido(long data_global)
+  return auxiliar;
+}
+
+vector<Perecivel> Estoque::removerVencido(long data_global, short limite)
 {
 	vector<Perecivel> auxiliar;
 	if(pereciveis.begin() != pereciveis.end())
@@ -185,7 +194,7 @@ vector<Perecivel> Estoque::removerVencido(long data_global)
 		vector<Perecivel>::const_iterator it = pereciveis.begin();
 		for(size_t index = 0; index < pereciveis.size(); index++)
 		{
-			if(checarVencimento(index, data_global))
+			if(checarVencimento(index, data_global, limite))
 			{
 				auxiliar.push_back(pereciveis[index]);
 				pereciveis.erase(it+index,it+index+1);
@@ -215,7 +224,7 @@ vector<Produto> Estoque::retornaProduto() const
 
 vector<Perecivel> Estoque::retornaPerecivel() const
 {
-	return this->pereciveis;
+	return pereciveis;
 }
 
 size_t Estoque::retornaTamanhoProduto() const
@@ -238,7 +247,7 @@ bool Estoque::salvarProdutos()
 		cerr << endl;
 		
 	ofstream arquivo;
-	arquivo.open("func\\info\\Produto.txt");
+	arquivo.open("func//info//Produto.txt");
 	if(!arquivo.is_open())
 		return false;
 	
@@ -259,7 +268,7 @@ bool Estoque::salvarPereciveis()
 		return false;
 	
 	ofstream arquivo;
-	arquivo.open("func\\info\\Perecivel.txt");
+	arquivo.open("func//info//Perecivel.txt");
 	if(!arquivo.is_open())
 		return false;
 
@@ -277,7 +286,7 @@ bool Estoque::salvarPereciveis()
 bool Estoque::salvarInfo()
 {
 	ofstream arquivo;
-	arquivo.open("func\\info\\Info.txt");
+	arquivo.open("func//info//Info.txt");
 	
 	if(!arquivo.is_open())
 		return false;
@@ -287,7 +296,7 @@ bool Estoque::salvarInfo()
 	return true;
 }
 
-//Métodos ordenadores
+//Mï¿½todos ordenadores
 void Estoque::opNome()
 {
 	for(size_t index = 0; index < produtos.size(); index++)
@@ -351,10 +360,10 @@ void Estoque::opCategoria()
 			}		
 }
 
-//Métodos de impressão
+//Mï¿½todos de impressï¿½o
 void Estoque::imprimeProdutos() const
 {
-	cout << "Produtos não pereciveis: " << endl << endl;
+	cout << "Produtos nï¿½o pereciveis: " << endl << endl;
 	
 	for(int i = 0 ; i < produtos.size() ; i++)
 	{

@@ -1,23 +1,8 @@
-#include "..\\header\\Estoque.h"
+#include "..//header//Estoque.h"
 
 /*
-	ESTE ARQUIVO SERÁ USADO PARA IMPLEMENTAR TODAS AS SOBRECARGAS GLOBAIS DO PROJETO
+	ESTE ARQUIVO SERï¿½ USADO PARA IMPLEMENTAR TODAS AS SOBRECARGAS GLOBAIS DO PROJETO
 */
-
-ofstream& operator << (ofstream& c, Produto_t& produto_type)
-{
-	//String
-	c << produto_type.categoria << endl;
-	c << produto_type.marca << endl;
-	c << produto_type.nome_produto << endl;
-	//int
-	c << produto_type.codigo << endl;
-	c << produto_type.quantidade << endl;
-	//float
-	c << produto_type.preco_venda;
-	
-	return c;
-}
 
 ofstream& operator << (ofstream& c, Produto& p)
 {
