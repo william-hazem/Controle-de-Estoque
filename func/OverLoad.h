@@ -14,7 +14,8 @@ ofstream& operator << (ofstream& c, Produto& p)
 	c << p.getItem().codigo << endl;
 	c << p.getItem().quantidade << endl;
 	//float
-	c << p.getItem().preco_venda;
+	c << p.getItem().preco_venda << endl;
+  c << p.getItem().preco_compra;
 	
 	return c;
 }
@@ -30,7 +31,8 @@ ofstream& operator << (ofstream& c, Perecivel& p)
 	c << p.getItem().quantidade << endl;
 	c << p.getData_validade() << endl;
 	//float
-	c << p.getItem().preco_venda;
+	c << p.getItem().preco_venda << endl;
+  c << p.getItem().preco_compra;
 	return c;
 }
 
@@ -43,6 +45,7 @@ ifstream& operator >> (ifstream& c, Produto& p)
 	c >> item.codigo; c.ignore();
 	c >> item.quantidade; c.ignore();
 	c >> item.preco_venda; c.ignore();
+  c >> item.preco_compra; c.ignore();
 	p.setItem(item);
 	return c;
 }
@@ -58,6 +61,7 @@ ifstream& operator >> (ifstream& c, Perecivel& p)
 	c >> item.quantidade; c.ignore();
 	c >> data_validade; c.ignore();
 	c >> item.preco_venda; c.ignore();
+  c >> item.preco_compra; c.ignore();
 	p.setItem(item);
 	p.setData_validade(data_validade);
 	return c;

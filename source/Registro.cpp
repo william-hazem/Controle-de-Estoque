@@ -69,6 +69,9 @@ void Registro::imprimirRegistro()const
 {
 	cout << "Quantidade de produtos que entraram  no estoque: " << q_entrada << endl;
 	cout << "Quantidade de produtos que sairam do estoque: " << q_saida << endl;
+	cout << "Apurado total com vendas: " << apurado << " R$" << endl;
+	cout << "Despeza total com compras: " << calcularDespezas() << " R$" << endl;
+	cout << "Lucro de compra e venda: " << calcularLucro() << " R$" << endl;
 	cout << "Saldo total do caixa: "  << saldo << " R$" << endl;
 }
 
@@ -79,12 +82,12 @@ float Registro::calcularDespezas()const
 	vector<Produto>aux = retornaProduto();
 	
 	for(size_t index = 0; index < aux.size(); index++)
-		despeza1 += aux[index].getItem().preco_venda;
+		despeza1 += aux[index].getItem().preco_compra;
 	
 	vector<Perecivel>auxiliar = retornaPerecivel();
 	
 	for(size_t index = 0; index < auxiliar.size(); index++)
-		despeza2 += auxiliar[index].getItem().preco_venda;
+		despeza2 += auxiliar[index].getItem().preco_compra;
 	
 	
 	return despeza1 + despeza2;

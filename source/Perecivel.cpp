@@ -20,8 +20,13 @@ int Perecivel::tempoValidade(long data_atual) const
 	long auxiliar = data_validade - data_atual;
 	int dias;
 	
-	if(auxiliar <= 0) return 0;
-	dias = (auxiliar%10000)*365;
+  if(auxiliar <= 0) return 0;
+
+  //if(data_validade < 9123000)
+    //dias = (auxiliar%1000)*365;
+  
+  dias = (auxiliar%10000)*365;
+  
 	auxiliar = auxiliar/10000;
 	dias += (auxiliar%100)*30;
 	auxiliar = auxiliar/100;

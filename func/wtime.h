@@ -1,10 +1,11 @@
 /*
 	Autor: William Henrique A. Martins
 		   DEE UFCG
-	A função abaixo suprime a necessidade de um time, use como desejar	
+	A funï¿½o abaixo suprime a necessidade de um time, use como desejar	
 */
 
 #include <ctime>
+
 void stopf(int time)
 {
 	clock_t fixed_t = time, current_t = 0, relative_t = clock();
@@ -14,3 +15,7 @@ void stopf(int time)
 	}
 }
 
+void getTime(int* pdia, int* pmes, int* pano)
+{
+  
+}

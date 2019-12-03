@@ -7,6 +7,7 @@ using namespace std;
 struct Produto_t
 {
 	float preco_venda;
+  float preco_compra;
 	string nome_produto;
 	string marca;
 	string categoria;
@@ -21,10 +22,11 @@ private:
 
 public:
 	
-	Produto(Produto_t = {0," ", " ", " ", 0, 0} );
+	Produto(Produto_t = {0, 0, " ", " ", " ", 0, 0} );
 
 	void setItem(Produto_t);
 	void setPreco_venda(float);
+  void setPreco_compra(float);
 	void setNome_produto(string);
 	void seMarca(string);
 	void setCategoria(string);

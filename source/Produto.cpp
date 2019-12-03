@@ -16,6 +16,11 @@ void Produto::setPreco_venda(float preco_venda)
     this->item.preco_venda = preco_venda;
 }
 
+void Produto::setPreco_compra(float preco_compra)
+{
+  this->item.preco_compra = preco_compra;
+}
+
 void Produto::setNome_produto(string nome_produto)
 {
     this->item.nome_produto = nome_produto;
