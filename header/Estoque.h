@@ -1,3 +1,4 @@
+
 #ifndef ESTOQUE_H
 #define ESTOQUE_H
 
@@ -30,14 +31,14 @@ public:
 	bool adicionarProduto(long int, long int);
 	
 	bool remover(long int);
-	bool remover(long int, size_t);
+  bool remover(long int, size_t);
 	
 	size_t pesquisarProduto(long) const;
-	size_t pesquisarPerecivel(long) const;
+  size_t pesquisarPerecivel(long) const;
 	
-	bool checarVencimento(size_t, long, short = 0) const;
-  vector<Perecivel> retornaVencido(long, short = 0) const;
-	vector<Perecivel> removerVencido(long, short = 0);
+	bool checarVencimento(size_t, data_t, ushort = 0) const;
+  vector<Perecivel> retornaVencido(data_t, ushort = 0) const;
+	vector<Perecivel> removerVencido(data_t, ushort = 0);
 	
 	Produto retornaProduto(size_t) const;
 	Perecivel retornaPerecivel(size_t) const;

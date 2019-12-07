@@ -51,9 +51,11 @@ Estoque::Estoque()
 //Destrutor - salva os dados ao fim do escopo
 Estoque::~Estoque()
 {
+/*
+	salvarInfo();
 	salvarProdutos();
 	salvarPereciveis();
-	salvarInfo();
+*/
 }
 
 //AdicionarProduto com sobrecargas locais
@@ -163,13 +165,13 @@ size_t Estoque::pesquisarPerecivel(long codigo) const
 	return pereciveis.size()+1;
 }
 
-bool Estoque::checarVencimento(size_t index, long data_atual, short limite) const
+bool Estoque::checarVencimento(size_t index, data_t data_atual, ushort limite) const
 {
 	if(pereciveis[index].tempoValidade(data_atual) <= limite)
 		return true;
 	return false;
 }
-vector<Perecivel> Estoque::retornaVencido(long data_atual, short limite) const
+vector<Perecivel> Estoque::retornaVencido(data_t data_atual, ushort limite) const
 {
   vector<Perecivel> auxiliar;
   for(size_t index = 0; index < pereciveis.size(); index++)
@@ -179,7 +181,7 @@ vector<Perecivel> Estoque::retornaVencido(long data_atual, short limite) const
   return auxiliar;
 }
 
-vector<Perecivel> Estoque::removerVencido(long data_global, short limite)
+vector<Perecivel> Estoque::removerVencido(data_t data_atual, ushort limite)
 {
 	vector<Perecivel> auxiliar;
 	if(pereciveis.begin() != pereciveis.end())
@@ -187,7 +189,7 @@ vector<Perecivel> Estoque::removerVencido(long data_global, short limite)
 		vector<Perecivel>::const_iterator it = pereciveis.begin();
 		for(size_t index = 0; index < pereciveis.size(); index++)
 		{
-			if(checarVencimento(index, data_global, limite))
+			if(checarVencimento(index, data_atual, limite))
 			{
 				auxiliar.push_back(pereciveis[index]);
 				pereciveis.erase(it+index,it+index+1);
@@ -383,10 +385,11 @@ void Estoque::imprimePereciveis() const
 		cout << "Nome: " << pereciveis[i].getItem().nome_produto << endl;
 		cout << "Categoria: " << pereciveis[i].getItem().categoria << endl;
 		cout << "Marca: " << pereciveis[i].getItem().marca << endl;
-    cout << "Preço de compra: " << produtos[i].getItem().preco_compra << endl;
+    cout << "Preço de compra: " << pereciveis[i].getItem().preco_compra << endl;
 		cout << "Preco venda: " << pereciveis[i].getItem().preco_venda << endl;
 		cout << "Quantidade: " << pereciveis[i].getItem().quantidade << endl;
 		cout << "Codigo: " << pereciveis[i].getItem().codigo << endl;
-		cout << "Validade: " << pereciveis[i].getData_validade() << endl << endl;
+		cout << "Validade: ";
+    pereciveis[i].imprimirData();
 	}
 }

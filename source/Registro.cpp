@@ -8,17 +8,16 @@ Registro::Registro()
 	q_saida = 0;
 }
 
-void Registro::Registrar(Produto produto)
+void Registro::Registrar()
 {
 	ofstream arquivo("Reg_01.txt",ios::app);
 	
-  arquivo << produto.getItem().nome_produto << endl;
-	arquivo << produto.getItem().categoria << endl;
-	arquivo << produto.getItem().marca << endl;
-	arquivo << produto.getItem().codigo << endl;
-	arquivo << produto.getItem().quantidade << endl;
-	arquivo << produto.getItem().preco_venda;
-  cout << "Produto registrado!!!" << endl;
+  arquivo << q_entrada << endl;
+	arquivo << q_saida << endl;
+	arquivo << calcularDespezas() << endl;
+	arquivo << apurado << endl;
+	arquivo << calcularLucro() << endl;
+  cout << "Registro finalizado!!!" << endl;
 }
 
 void Registro::set_saldo(float saldo)
@@ -28,16 +27,19 @@ void Registro::set_saldo(float saldo)
 
 void Registro::set_q_entrada()
 {
+  int q_entrada1 = 0, q_entrada2 = 0; 
+
 	vector<Produto> auxilar = retornaProduto();
 
 	for(size_t index = 0; index < auxilar.size(); index++)
-		q_entrada += auxilar[index].getItem().quantidade;
+		q_entrada1 += auxilar[index].getItem().quantidade;
 
 	vector<Perecivel> aux  = retornaPerecivel();
 	
 	for(size_t index = 0; index < aux.size(); index++)
-		q_entrada += aux[index].getItem().quantidade;
-		
+		q_entrada2 += aux[index].getItem().quantidade;
+
+  q_entrada = q_entrada1 + q_entrada2;
 }
 
 void Registro::set_q_saida(int count)
@@ -77,29 +79,25 @@ void Registro::imprimirRegistro()const
 
 float Registro::calcularDespezas()const
 {
-	float despeza1, despeza2;
+	float despeza1 = 0, despeza2 = 0;
 	
 	vector<Produto>aux = retornaProduto();
 	
 	for(size_t index = 0; index < aux.size(); index++)
-		despeza1 += aux[index].getItem().preco_compra;
+		despeza1 += (aux[index].getItem().preco_compra * aux[index].getItem().quantidade);
 	
 	vector<Perecivel>auxiliar = retornaPerecivel();
 	
 	for(size_t index = 0; index < auxiliar.size(); index++)
-		despeza2 += auxiliar[index].getItem().preco_compra;
+		despeza2 +=  (auxiliar[index].getItem().preco_compra * auxiliar[index].getItem().quantidade);
 	
 	
 	return despeza1 + despeza2;
 }
 
-void Registro::calcularApurado(size_t index)
-{
-	vector<Produto>produtos = retornaProduto();
-	vector<Perecivel>pereciveis = retornaPerecivel();
-	
-			apurado = apurado + produtos[index].getItem().preco_venda;
-	
+void Registro::calcularApurado(float precoVenda)
+{ 
+  apurado += (precoVenda * q_saida);
 }
 
 float Registro::calcularLucro()const

@@ -15,7 +15,10 @@ void stopf(int time)
 	}
 }
 
-void getTime(int* pdia, int* pmes, int* pano)
+void stopsec(double second)
 {
-  
+  double fixed_t = clock() / (double)CLOCKS_PER_SEC , current_t =0;
+  while(second >= current_t)
+    current_t = (double(clock() - fixed_t)) / CLOCKS_PER_SEC;
 }
+

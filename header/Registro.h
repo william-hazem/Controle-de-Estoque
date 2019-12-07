@@ -14,17 +14,17 @@ class Registro : public Estoque
 	
 	public:
 		Registro();
-		void Registrar(Produto);
+		void Registrar();
 		void set_saldo(float);
-		void set_q_entrada();
 		void set_q_saida(int);
+    void set_q_entrada();
 		float get_saldo()const;
 		float get_apurado()const;
 		int get_q_entrada()const;
 		int get_q_saida()const;
 		void imprimirRegistro()const;
 		float calcularDespezas()const;
-		void calcularApurado(size_t);
+		void calcularApurado(float);
 		float calcularLucro()const;
 		void atualizaSaldo();
 };

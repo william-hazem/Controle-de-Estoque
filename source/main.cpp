@@ -1,6 +1,6 @@
 #include "..//header//Estoque.h"
-#include "..//header//Registro.h" //Oq queres?
-#include "..//func//wtime.h"    //Minha função by will <3
+#include "..//header//Registro.h"
+#include "..//func//wtime.h"    
 
 #include <cstring>
 #include <clocale>
@@ -10,119 +10,127 @@
 void menu();
 int escolha();
 Produto_t lerItem();
+data_t lerData();
 void removerEspaco(Produto_t*);
-long int dataSistema();
+Data dataSistema();
 void imprime(Produto);
 void imprime(Perecivel);
 
 //MAIN
 int main()
 {
-    setlocale(LC_ALL,"portuguese");
-	  //system("func//cdata.bat");
-    system("COLOR B");
-    
-    //Instâncias auxiliares
-    Produto_t item;
-    Perecivel perecivel;
-    Produto produto;
-    Registro registro;
-    
-    //Instância principal
-    Estoque estoque;
-    //Variáveis
-    long data_atual = dataSistema();
-    long int codigo;
-    size_t op1, op2, quantidade_produto, x = 0;
+  setlocale(LC_ALL,"portuguese");
+  //system("func//cdata.bat");
+  system("COLOR B");
+  
+  //Instâncias auxiliares
+  Produto_t item;
+  Perecivel perecivel;
+  Produto produto;
+  Registro registro;
+  
+  //Instância principal
+  Estoque estoque;
+  //Variáveis
+  Data data_atual = dataSistema();
+  long codigo;
+  string nome, marca, pausar;
+  size_t op1, op2, quantidade_produto, x = 0;
 
+  
 
-    do
+  do
+  {
+    menu();
+    x = 0;
+    while(x == 0)
     {
-      menu();
-      x = 0;
-      while(x == 0)
+      try
       {
-        try
-        {
-          op1 = escolha();
-          if((op1 < 0) || (op1 > 6))
-          {
-            throw "Você não informou a opção corretamente!";
-          }
-            else{x = 1;}
-        }
-        catch(const char* e)
-        {
-          cout << "Erro: " << e << endl;
-        } 
+        op1 = escolha();
+        if(op1 < 0 || op1 > 6)
+          throw "Você não informou a opção corretamente!";
+        else x = 1;
       }
-      system("cls||clear");
-
-      switch(op1)
+      catch(const char* e)
       {
-        case 0:
-          cout << "Saindo..." << endl;
-          op1 = 0;
-          break;        
-        
-        case 1:
+        cout << "Erro: " << e << endl;
+        stopsec(0.5);
+      } 
+    }
+    system("cls||clear");
+
+    switch(op1)
+    {
+      case 0:
+        cout << "Programa Encerrado!!" << endl;
+        op1 = 0;
+        break;        
+      
+      case 1:
+      {
+        cout << "-> Adicionar Produto: " << endl << endl;
+        cout << "(1) - Adicionar novo produto" << endl;
+        cout << "(2) - Adicionar produto perecivel" << endl;
+        cout << "(3) - Adicionar produto existente" << endl;
+        cout << "(4) - Voltar ao menu principal" << endl;
+        cout << "(0) - Encerrar o programa" << endl;
+        x = 0;
+        while(x == 0)
         {
-          cout << "-> Adicionar Produto: " << endl << endl;
-          cout << "(1) - Adicionar novo produto" << endl;
-          cout << "(2) - Adicionar produto perecivel" << endl;
-          cout << "(3) - Adicionar produto existente" << endl;
-          cout << "(4) - Voltar ao menu principal" << endl;
-          cout << "(0) - Encerrar o programa" << endl;
-          
-          x = 0;
-          while(x == 0)
+          try
           {
+            op2 = escolha();
+            if(op2 < 0 || op2 > 4)
+              throw "Você não informou a opção corretamente!";
+            else
+              x = 1;
+          }
+          catch(const char* e)
+          {
+            cout << "Erro: " << e << endl;
+          }
+        }
+        system("cls||clear");
+
+        switch(op2)
+        {
+          case 0:
+          {
+            cout << "Programa Encerrado!!" << endl;
+            op1 = 0;
+            break;
+          }
+              
+          case 1:
+          {
+            item = lerItem();
+            produto.setItem(item);
             try
             {
-              op2 = escolha();
-              if((op2 < 0) || (op2 > 4))
-                throw "Você não informou a opção corretamente!";
+              if(estoque.adicionarProduto(produto))
+              {
+                cout << "Produto adicionado ao estoque." << endl;
+                registro.set_q_entrada();
+                estoque.salvarProdutos();
+                estoque.salvarInfo();
+              }
               else
-                x = 1;
+                throw "Não foi possível adicionar o produto. O código utilizado já foi registrado por outro produto.";
             }
             catch(const char* e)
             {
               cout << "Erro: " << e << endl;
-            }
+            }              
+            break;
           }
-          system("cls||clear");
 
-          switch(op2)
-          {
-            case 0:
+          case 2:
             {
-              cout << "Saindo..." << endl;
-              op1 = 0;
-              break;
-            }
-                
-            case 1:
-            {
+              
               item = lerItem();
-              produto.setItem(item);
-              if(estoque.adicionarProduto(produto))
-              {
-                cout << "Produto adicionado ao estoque." << endl;
-                estoque.salvarProdutos();
-                registro.Registrar(item);
-              }
-              else
-                cout << "Não foi possível adicionar o produto. O código utilizado já foi registrado por outro produto." << endl;
-              stopf(1000);
-              break;
-            }
-
-            case 2:
-            {
-              long int data_vencimento;
-              item = lerItem();
-              cout << "Data de validade: " << endl;
-              cin >> data_vencimento; cin.ignore();
+              cout << "Data de validade: (Dia Mês Ano)" << endl;
+              data_t data_vencimento = lerData();
               perecivel.setData_validade(data_vencimento);
               perecivel.setItem(item);
               if(estoque.adicionarProduto(perecivel))
@@ -132,220 +140,280 @@ int main()
               }
               else
                 cout << "Não foi possível adicionar o produto. O código utilizado já foi registrado por outro produto." << endl;
-              stopf(1000);
-              break;
             }
-                
-            case 3:
-            {
-              long int codigo;
-              int quantidade_produto;
-              cout << "Informe o código do produto que deseja adicionar" << endl;
-              cin >> codigo; cin.ignore();
-              cout << "Quantas unidades serão adicionadas? " << endl;
-              cin >> quantidade_produto; cin.ignore();
-              if(estoque.adicionarProduto(codigo, quantidade_produto))
-                cout << "O produto foi adicionado." << endl;
-              else
-                cout << "Não foi possível adicionar o produto; o código não confere." << endl;
-              stopf(1000);
-              break;
-            }
+            break;
 
-            case 4:
+          case 3:
+          {
+            long int codigo;
+            int quantidade_produto;
+            cout << "Informe o código do produto que deseja adicionar." << endl;
+            cin >> codigo; cin.ignore();
+            cout << "Quantas unidades serão adicionadas? " << endl;
+            cin >> quantidade_produto; cin.ignore();
+            if(estoque.adicionarProduto(codigo, quantidade_produto))
             {
-              break;
+              cout << "O produto foi adicionado ao estoque." << endl;
+              size_t index = estoque.pesquisarProduto(codigo);
             }
-            
-          }
-          estoque.salvarInfo();
-          system("pause");
-          system("cls||clear");
+            else
+              cout << "Não foi possível adicionar o produto, o código não confere com nenhum produto do estoque." << endl;
+            }
+            break;
+
+          case 4:
+            break;  
+        }
+        stopsec(0.35);
+        estoque.salvarInfo();
+        system("cls||clear");
+        break;
+      }
+
+    case 2:
+    {
+      cout << "-> Imprimir Dados Ordenados: " << endl << endl;
+      cout << "(1) - Ordenar por Nome" << endl;
+      cout << "(2) - Ordenar por Categoria" << endl;
+      cout << "(3) - Ordenar por Preço" << endl;
+      cout << "(4) - Voltar ao menu principal" << endl;
+      cout << "(0) - Encerrar o programa" << endl;
+      x = 0;
+      while(x == 0)
+      {
+        try
+        {
+          op2 = escolha();
+          if(op2 < 0 || op2 > 4)
+            throw "Você não informou a opção corretamente!";
+          else
+            x = 1;
+        }
+        catch(const char* e)
+        {
+          cout << "Erro: " << e << endl;
+        }
+      }
+      system("cls||clear");
+      switch(op2)
+      {
+        case 0:
+        {
+          cout << "Programa Encerrado!!" << endl;
+          op1 = 0;
           break;
         }
+          
+        case 1:
+        {
+          estoque.opNome();
+          cout << "Produtos ordenados por Nome: " << endl;
+          estoque.imprimeProdutos();
+          cout << "Produtos Perecíveis ordenados por Nome: " << endl;
+          estoque.imprimePereciveis();
+          break;
+        }
+          
         case 2:
         {
-          cout << "-> Imprimir Dados Ordenados: " << endl << endl;
-          cout << "(1) - Ordenar por Nome" << endl;
-          cout << "(2) - Ordenar por Categoria" << endl;
-          cout << "(3) - Ordenar por Preço" << endl;
-          cout << "(4) - Voltar ao menu principal" << endl;
-          cout << "(0) - Encerrar o programa" << endl;
+          estoque.opCategoria();
+          cout << "Produtos ordenados por Categoria: " << endl;
+          estoque.imprimeProdutos();
+          cout << "Produtos Perecíveis ordenados por Categoria: " << endl;
+          estoque.imprimePereciveis();
+          break;
+        }
+        
+        case 3:
+        {
+          estoque.opPreco();
+          cout << "Produtos ordenados por Preco: " << endl;
+          estoque.imprimeProdutos();
+          cout << "Produtos Perecíveis ordenados por Preco: " << endl;
+          estoque.imprimePereciveis();
+          estoque.salvarInfo();
+          break;
+        }
+        
+        case 4:
+          break;        
+      }
+      system("pause") || cin >> pausar;
+      system("cls||clear");
+      break;
+    }
+            
+    case 3:
+    {
+      cout << "-> Remover Produto: " << endl << endl;
+      cout << "(1) - Remover item usando o código do produto" << endl;
+      cout << "(2) - Remover os produtos vencidos" << endl;
+      cout << "(3) - Remover prudutos vendidos, a partir de seu código" << endl;
+      cout << "(4) - Voltar ao menu principal" << endl;
+      cout << "(0) - Encerrar o programa" << endl;
+      x = 0;
+      while(x == 0)
+      {
+        try
+        {
+          op2 = escolha();
+          if(op2 < 0 || op2 > 4)
+            throw "Você não informou a opção corretamente!";
+          else
+            x = 1;
+        }
+        catch(const char* e)
+        {
+          cout << "Erro: " << e << endl;
+        }
+      }
+      system("cls||clear");
+      switch(op2)
+      {
+        case 0:
+        {
+          cout << "Programa Encerrado!!" << endl;
+          op1 = 0;
+          break;
+        } 
+
+        case 1:
+        {
+          cout << "Informe o código do produto:" << endl;
+          cin >> codigo;
+
+          size_t index = estoque.pesquisarProduto(codigo);
+
+          if(index < estoque.retornaTamanhoProduto())
+          {
+            size_t count = estoque.retornaProduto(estoque.pesquisarProduto(codigo)).getItem().quantidade;
+            registro.set_q_saida(count);
+            registro.calcularApurado(estoque.retornaProduto(estoque.pesquisarProduto(codigo)).getItem().preco_venda);
+          }
+
+          if(estoque.remover(codigo))
+          {
+            cout << "Removido com sucesso..." << endl;
+            estoque.salvarProdutos();
+            estoque.salvarInfo();
+          }
+          else
+            cout << "Produto não encontrado no estoque" << endl;
+          stopsec(0.5);
+          break;
+        }  
+
+        case 2:
+        {
+          unsigned short int quantidade;
+          cout << "Qual intervalo de dias que deseja efetuar a busca sobre os produtos com data de validade:";
+          cin >> quantidade;
+          vector<Perecivel> auxiliar = estoque.removerVencido(data_atual, quantidade);
+
+          if(auxiliar.begin() != auxiliar.end())
+          {
+            cout << "Exibindo produtos vencidos: ( Intervalo de vencimento: " << quantidade << " dia(s) )"  << endl;
+            cout << left << "|" <<setw(25) << "Categoria" << "|" << setw(25) << "Nome" << "|" << setw(25) <<"Marca" << "|" << setw(10) << "Data" << "|" << endl;
+            cout << setfill('=') << setw(25+25+25+10+5) << " " << endl;
+            cout << setfill('.');
+          }
+          else
+            cout << "Não há produtos dentro do prazo de validade estabelicido" << endl;
+          
+          
+          for(size_t index = 0; index < auxiliar.size(); index ++)
+          {
+            Produto_t item = auxiliar[index].getItem();
+            cout << left << "|" << setw(25) << item.categoria << "|" << setw(25) << item.nome_produto << "|" << setw(25) << item.marca << "|" << setw(10) << " " << "|" << endl;
+          }
+          break;
+        }
+          
+        case 3:
+        {
           x = 0;
           while(x == 0)
           {
-              try
-              {
-                op2 = escolha();
-                if((op2 < 0) || (op2 > 4))
-                  throw "Você não informou a opção corretamente!";
-                else
-                  x = 1;
-              }
-              catch(const char* e)
-              {
-                cout << "Erro: " << e << endl;
-              }
-            }
-            system("cls||clear");
-            switch(op2)
+            try
             {
-              case 0:
+              cout << "Informe o código do produto - '0' caso deseje voltar ao Menu principal: " << endl;
+              cin >> codigo; cin.ignore();
+              cout << "Agora informe a quantidade de produtos que foram vendidos: " << endl;
+              int quantidade_produto;
+              cin >> quantidade_produto; cin.ignore();      
+              if(quantidade_produto == 0) 
+                x = 1;
+              if(estoque.remover(codigo,quantidade_produto))
               {
-                cout << "Saindo..." << endl;
-                op1 = 0;
-                break;
-              }
-                
-              case 1:
-              {
-                estoque.opNome();
-                cout << "Produtos ordenados por Nome: " << endl;
-                estoque.imprimeProdutos();
-                cout << "Produtos Perecíveis ordenados por Nome: " << endl;
-                estoque.imprimePereciveis();
-                break;
-              }
-                
-              case 2:
-              {
-                estoque.opCategoria();
-                cout << "Produtos ordenados por Categoria: " << endl;
-                estoque.imprimeProdutos();
-                cout << "Produtos Perecíveis ordenados por Categoria: " << endl;
-                estoque.imprimePereciveis();
-                estoque.salvarInfo();
-                break;
-              }
+                cout << "Produto(s) removido(s) com sucesso. " << endl;
+                registro.calcularApurado(estoque.pesquisarProduto(codigo));
+                x = 1;
               
-              case 3:
-              {
-                estoque.opPreco();
-                cout << "Produtos ordenados por Preco: " << endl;
-                estoque.imprimeProdutos();
-                cout << "Produtos Perecíveis ordenados por Preco: " << endl;
-                estoque.imprimePereciveis();
-                estoque.salvarInfo();
-                break;
               }
-              
-              case 4:
-              {
-                break;
-              }
-                   
+              else
+                throw "Código ou quantidade não conferem.";
             }
-            system("pause");
-            system("cls||clear");
-            break;
-        }
-            
-        case 3:
-        {
-            cout << "-> Remover Produto: " << endl << endl;
-            cout << "(1) - Remover item usando o código do produto" << endl;
-            cout << "(2) - Remover os produtos vencidos" << endl;
-            cout << "(3) - Remove uma quantidade de produtos, a partir de seu código" << endl;
-            cout << "(4) - Voltar ao menu principal" << endl;
-            cout << "(0) - Encerrar o programa" << endl;
-            x = 0;
-            while(x == 0)
+            catch(const char* e)
             {
-              try
-              {
-                op2 = escolha();
-                if((op2 < 0) || (op2 > 4))
-                  throw "Você não informou a opção corretamente!";
-                else
-                  x = 1;
-              }
-              catch(const char* e)
-              {
-                cout << "Erro: " << e << endl;
-              }
+              cout << "Erro: " << e << endl;
             }
-            system("cls||clear");    
-            switch(op2)
-            {
-              case 0:
-                cout << "Saindo..." << endl;
-                op1 = 0;
-                break;
-
-              case 1:
-              {
-                cout << "Informe o código do produto:" << endl;
-                cin >> codigo;
-                int count;
-
-                size_t index = estoque.pesquisarPerecivel(codigo);
-                count = estoque.retornaPerecivel(index).getItem().quantidade;
-                if(estoque.remover(codigo))
-                {
-                  registro.set_q_saida(count);
-                  cout << "Produto removido com sucesso." << endl;
-                  registro.calcularApurado(index);
-                  estoque.salvarInfo();
-                }
-              }  
-                break;
-
-              case 2:
-              {
-                cout << "Exibindo produtos vencidos: ( Intervalo de vencimento: 0 dia(s) )"  << endl;
-                cout << left << "|" <<setw(25) << "Categoria" << "|" << setw(25) << "Nome" << "|" << setw(25) <<"Marca" << "|" << setw(10) << "Data" << "|" << endl;
-                cout << setfill('=') << setw(25+25+25+10+5) << " " << endl;
-                cout << setfill('.');
-                vector<Perecivel> auxiliar = estoque.removerVencido(data_atual, 0);
-                for(size_t index = 0; index < auxiliar.size(); index ++)
-                {
-                  Produto_t item = auxiliar[index].getItem();
-                  cout << left << "|" << setw(25) << item.categoria << "|" << setw(25) << item.nome_produto << "|" << setw(25) << item.marca << "|" << setw(10) << auxiliar[index].getData_validade() << "|" << endl;
-                }
-                break;
-              }
-
-              case 3:
-              {
-                cout << "Informe o código do produto: " << endl;
-                cin >> codigo; cin.ignore();
-                cout << "Agora informe a quantidade de produtos que serão removidos: " << endl;
-                cin >> quantidade_produto; cin.ignore();
-                if(estoque.remover(codigo,quantidade_produto))
-                {
-                    cout << "Produto(s) removido(s) com sucesso. " << endl;
-                    registro.calcularApurado(estoque.pesquisarProduto(codigo));
-                }
-                else
-                    cout << "Código ou quantidade não conferem." << endl;
-                break;
-              }
-              
-              case 4:
-              {
-                break;
-              }
           }
-          system("pause");
-          system("cls||clear");
-          break;
+          break;    
         }
-            
 
-        case 4: 
-            cout << "-> Verificar estoque: " << endl << endl;
-            cout << "(1) - Pesquisar produto a partir do codigo"<< endl;
-            cout << "(2) - Pesquisar produtos perto do vencimento da data de validade e exibi-los" << endl;
-            cout << "(3) - Voltar ao menu principal" << endl;
-            cout << "(0) - Encerrar o programa" << endl;
-              
+        case 4:
+          break;
+      }
+        cin >> pausar;
+        system("pause");
+        system("cls||clear");
+        break;
+      }
+
+      case 4:
+      { 
+        cout << "-> Verificar estoque: " << endl << endl;
+        cout << "(1) - Pesquisar produto a partir do codigo"<< endl;
+        cout << "(2) - Pesquisar produtos perto do vencimento da data de validade e exibi-los" << endl;
+        cout << "(3) - Voltar ao menu principal" << endl;
+        cout << "(0) - Encerrar o programa" << endl;
+        x = 0;
+        while(x == 0)
+        {
+          try
+          {
+            op2 = escolha();
+            if((op2 < 0) || (op2 > 3))
+              throw "Você não informou a opção corretamente!";
+            else
+              x = 1;
+          }
+          catch(const char* e)
+          {
+            cout << "Erro: " << e << endl;
+          }
+        }
+        system("cls||clear");
+          
+        switch(op2)
+        {
+          case 0:
+            cout << "Programa Encerrado!!" << endl;
+            op1 = 0;
+            break;               
+
+          case 1:
+            size_t index, opcao;
+            cout << "(1) - Para um não perecível" << endl;
+            cout << "(2) - Para um perecível" << endl;
+      
             x = 0;
             while(x == 0)
             {
               try
               {
-                op2 = escolha();
-                if((op2 < 0) || (op2 > 3))
+                cin >> opcao; cin.ignore();
+                if((opcao < 1) || (opcao > 2))
                   throw "Você não informou a opção corretamente!";
                 else
                   x = 1;
@@ -355,80 +423,51 @@ int main()
                 cout << "Erro: " << e << endl;
               }
             }
-            system("cls||clear");
-              
-            switch(op2)
+            system("cls");
+
+            cout << "Informe o código do produto:" << endl;
+            cin >> codigo;
+            if (opcao==1)
             {
-              case 0:
-                cout << "Saindo..." << endl;
-                op1 = 0;
-                break;               
-
-              case 1:
-                size_t index, opcao;
-                cout << "(1) - Para um não perecível" << endl;
-                cout << "(2) - Para um perecível" << endl;
-          
-                x = 0;
-                while(x == 0)
-                {
-                  try
-                  {
-                    cin >> opcao; cin.ignore();
-                    if((opcao < 1) || (opcao > 2))
-                      throw "Você não informou a opção corretamente!";
-                    else
-                      x = 1;
-                  }
-                  catch(const char* e)
-                  {
-                    cout << "Erro: " << e << endl;
-                  }
-                }
-                system("cls");
-
-                cout << "Informe o código do produto:" << endl;
-                cin >> codigo;
-                if (opcao==1)
-                {
-                  index = estoque.pesquisarProduto(codigo);
-                  Produto auxiliar = estoque.retornaProduto(index);
-                  cout << "Produto com o respectivo código:" << endl;
-                  imprime(auxiliar);
-                }  
-  
-                if (opcao==2)
-                {
-                  index = estoque.pesquisarPerecivel(codigo);
-                  Perecivel auxiliar = estoque.retornaPerecivel(index);
-                  cout << "Produto perecível com o respectivo código:" << endl;
-                  imprime(auxiliar);
-                  cout << "Data de Vaidade: " << perecivel.getData_validade() << endl;
-                }
-                break;
-                    
-              case 2: 
-                long data;
-                cout << "Informe a data atual: " << endl;
-                cin >> data; cin.ignore();
-                vector<Perecivel> perecivel_aux = estoque.retornaPerecivel();
-                index = estoque.retornaTamanhoPerecivel();
-                cout << "Produtos próximos de se vencer" << endl;
-                for(size_t i = 0;i < index;i++){
-                  if (perecivel_aux[i].tempoValidade(data) < 3)
-                  {
-                    Perecivel aux = estoque.retornaPerecivel(i);
-                    imprime(aux);
-                    cout << endl;
-                  }
-                } 
-                break;             
+              index = estoque.pesquisarProduto(codigo);
+              Produto auxiliar = estoque.retornaProduto(index);
+              cout << "Produto com o respectivo código:" << endl;
+              imprime(auxiliar);
+              system("pause");
             }
-            
-            system("pause");
-            system("cls||clear");
-            break;
 
+            if (opcao==2)
+            {
+              index = estoque.pesquisarPerecivel(codigo);
+              Perecivel auxiliar = estoque.retornaPerecivel(index);
+              cout << "Produto perecível com o respectivo código:" << endl;
+              imprime(auxiliar);
+              cout << "Data de Vaidade: " << perecivel.dataFormatada() << endl;
+              system("pause");
+            }
+            break;
+                
+          case 2: 
+            vector<Perecivel> perecivel_aux = estoque.retornaPerecivel();
+            index = estoque.retornaTamanhoPerecivel();
+            cout << "Produtos próximos de se vencer" << endl;
+            for(size_t i = 0;i < index;i++){
+              if (perecivel_aux[i].tempoValidade(data_atual) < 7)
+              {
+                Perecivel aux = estoque.retornaPerecivel(i);
+                imprime(aux);
+                cout << endl;
+              }
+            } 
+            break;             
+        }
+        
+        cin >> pausar;
+        system("pause");
+        system("cls||clear");
+        break;
+      }
+        
         case 5:
          {
             cout << "->Registro Geral:" << endl;
@@ -437,8 +476,9 @@ int main()
             cout << "(3) - Valor gastos nas compras" << endl;
             cout << "(4) - Valor apurado nas vendas" << endl;
             cout << "(5) - Lucro obtido" << endl;
-            cout << "(6) - Imprimir Registro" << endl;
-            cout << "(7) - Voltar ao menu principal" << endl;
+            cout << "(6) - Atualizar o saldo" << endl;
+            cout << "(7) - Imprimir Registro" << endl;
+            cout << "(8) - Voltar ao menu principal" << endl;
             cout << "(0) - Sair" << endl;
               
             x = 0;
@@ -462,7 +502,7 @@ int main()
             switch(op2)
             {
               case 0:
-                cout << "Saindo...";
+                cout << "Programa Encerrado!!";
                 op1 = 0;
                 break;
               
@@ -476,7 +516,7 @@ int main()
                 break;
               
               case 3: 
-                cout << "Valor nas gastos nas compras: " << registro.calcularDespezas() << " R$." << endl;
+                cout << "Valor gastos nas compras: " << registro.calcularDespezas() << " R$." << endl;
                 break;
               
               case 4:
@@ -488,12 +528,19 @@ int main()
                 break;
 
               case 6:
-                registro.imprimirRegistro();
-                break;
+                registro.atualizaSaldo();
+                cout << "Saldo atualizado!!!" << endl;
 
               case 7:
+                registro.set_q_entrada();
+                registro.imprimirRegistro();
+                registro.Registrar();
+                break;
+
+              case 8:
                 break;
             }
+          cin >> pausar;
           system("pause");
           system("cls");
           break;
@@ -512,10 +559,13 @@ int main()
               cout << "As informações foram salvas com sucesso." << endl;
             else
               cout << "As informações não foram salvas com êxito." << endl;
+            stopsec(1.5);
+            system("pause");
+            system("cls||clear");
             break; 
         }
-      system("pause");
-      system("cls");
+      
+      
       }
     }
   }
@@ -529,10 +579,9 @@ void menu()
     /*
     A função têm como objetivo escrever a saída de texto abaixo e minimizar a quantidade de codigos dentro do escopo da main
     */
-
-    long int data_atual = dataSistema();
-
-    cout << "                          " << right << data_atual/1000000 << "/" << data_atual/10000%100 << "/" << data_atual%10000 << endl;
+    Data data_atual = dataSistema();
+    cout << "                           ";
+    data_atual.imprimirData();
     cout << "====================================" << endl;
     cout << " __   __  _______  __    _  __   __ " << endl;
     cout << "|  |_|  ||       ||  |  | ||  | |  |" << endl;
@@ -587,32 +636,56 @@ Produto_t lerItem()
 	return item;
 }
 
-long int dataSistema()
+data_t lerData()
 {
-  int dia, mes, ano;
+  data_t data;
+  while(true)
+  {
+    ushort dia, mes, ano;
+    cout << "Dia | Mês | Ano" << endl;
+    cin >> dia >> mes >> ano;
+    
+    try
+    {
+      if(!data.setData(dia,mes,ano))
+        throw "Erro";
+    }
+    catch(const char* erro)
+    {
+      cout << erro << endl;
+    }
+    break;
+  }
+  return data;
+}
+
+Data dataSistema()
+{
+  ushort dia, mes, ano;
   time_t timer;
   struct tm *horarioLocal;
-  //ifstream arquivo("func//info//data.txt");
-  //arquivo >> dia >> mes >> ano;
-  //arquivo.close();
+
   time(&timer);
   horarioLocal = localtime(&timer);
 
   dia = horarioLocal->tm_mday;
   mes = horarioLocal->tm_mon + 1;
   ano = horarioLocal->tm_year + 1900;
-  return (dia*1000000 + mes*10000 + ano);
+
+  Data data_atual(dia,mes,ano);
+  return data_atual;
 }
 
 void imprime(Produto auxiliar)
 {
-    cout <<"Nome: " << auxiliar.getItem().nome_produto << endl;
-    cout <<"Código: " << auxiliar.getItem().codigo << endl;
-    cout <<"Marca: " << auxiliar.getItem().marca << endl;
-    cout <<"Categoria: " << auxiliar.getItem().categoria << endl;
-    cout << "Preço de compra: " << auxiliar.getItem().preco_compra << endl;
-    cout <<"Preço de venda: " << auxiliar.getItem().preco_venda << endl;
-    cout <<"Quantidade: " << auxiliar.getItem().quantidade << endl;
+  cout <<"Nome: " << auxiliar.getItem().nome_produto << endl;
+  cout <<"Código: " << auxiliar.getItem().codigo << endl;
+  cout <<"Marca: " << auxiliar.getItem().marca << endl;
+  cout <<"Categoria: " << auxiliar.getItem().categoria << endl;
+  cout << "Preço de compra: " << auxiliar.getItem().preco_compra << endl;
+  cout <<"Preço de venda: " << auxiliar.getItem().preco_venda << endl;
+  cout <<"Quantidade: " << auxiliar.getItem().quantidade << endl;
+  stopsec(3);
 }
 
 void imprime(Perecivel auxiliar)
@@ -624,5 +697,6 @@ void imprime(Perecivel auxiliar)
     cout << "Preço de compra: " << auxiliar.getItem().preco_compra << endl;
     cout <<"Preço de venda: " << auxiliar.getItem().preco_venda << endl;
     cout <<"Quantidade: " << auxiliar.getItem().quantidade << endl;
-    cout <<"Data de validade" << auxiliar.getData_validade()<<endl;
+    cout <<"Data de validade" << auxiliar.dataFormatada()<<endl;
+    stopsec(3);
  } 
